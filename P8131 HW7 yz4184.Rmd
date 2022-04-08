@@ -1,0 +1,111 @@
+---
+title: "P8131 HW7 yz4184"
+author: "Yunlin Zhou"
+output: pdf_document
+---
+
+```{r, echo = T, message = FALSE, results='hide', warning=FALSE}
+
+library(tidyverse)
+library(nlme)
+library(ggplot2)
+library (lattice)
+library(patchwork)
+```
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+
+knitr::opts_chunk$set(
+  fig.width = 6,
+  fig.asp = .6,
+  out.width = "90%"
+)
+
+theme_set(theme_minimal() + theme(legend.position = "bottom"))
+
+options(
+  ggplot2.continuous.colour = "viridis",
+  ggplot2.continuous.fill = "viridis"
+)
+
+scale_colour_discrete = scale_colour_viridis_d
+scale_fill_discrete = scale_fill_viridis_d
+```
+
+
+```{r, message = FALSE, results='hide', warning=FALSE}
+# import data
+pitch_df = read.csv("./HW7-politeness_data.csv")%>%
+  drop_na()%>%
+  janitor::clean_names()
+```
+
+# (a) Exploratory analysis
+## provide boxplots to show the relation between gender/attitude and pitch (ignoring different scenarios).
+
+```{r fig.width = 8}
+a.p1 = pitch_df %>% 
+  ggplot(aes(x = gender, y = frequency)) +
+  geom_boxplot()+
+  labs(title = "relationship between gender and pitch")
+
+a.p2 = pitch_df %>% 
+  ggplot(aes(x = attitude, y = frequency)) +
+  geom_boxplot()+
+  labs(title = "relationship between attitude and pitch")
+
+(a.p1 + a.p2)
+```
+
+\newpage
+
+# (b)
+## Fit a mixed effects model with random intercepts for different subjects (gender and attitude being the fixed effects).
+
+```{r}
+LMM1 <- lme (frequency ~ gender + attitude, random = ~1 | subject,  data = pitch_df, method='REML') 
+summary (LMM1)
+```
+
+
+## What is the covariance matrix for a subject Yi?
+
+## What is the covariance matrix for the estimates of fixed effects?
+
+## What are the BLUPs for subject-specific intercepts?
+
+## What are the residuals?
+
+# (c)
+## Fit a mixed effects model with intercepts for different subjects (gender, attitude and their interaction being the fixed effects).
+
+```{r}
+LMM2 <- lme (frequency ~ gender * attitude, random = ~1 | subject,  data = pitch_df, method='REML') 
+summary (LMM2)
+```
+
+## Use likelihood ratio test to compare this model with the model in part (b) to determine whether the interaction term is significantly associated with pitch.
+
+```{r}
+LMM.1 <- lme (frequency ~ gender + attitude, random = ~1 | subject,  data = pitch_df, method='ML')
+
+LMM.2 <- lme (frequency ~ gender * attitude, random = ~1 | subject,  data = pitch_df, method='ML')
+
+anova(LMM.2,LMM.1) 
+```
+
+
+# (d)
+## Write out the mixed effects model with random intercepts for both subjects and scenarios (gender and attitude being the fixed effects).
+
+##  Fit the model using lmer in the lme4 package.
+
+##  Write out the covariance matrix for a subject Yi.
+
+## What is the interpretation of the coefficient for the fixed effect term attitude?
+
+
+
+
+
