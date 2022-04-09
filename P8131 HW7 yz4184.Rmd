@@ -1,7 +1,9 @@
 ---
 title: "P8131 HW7 yz4184"
 author: "Yunlin Zhou"
-output: pdf_document
+output:
+  word_document: default
+  pdf_document: default
 ---
 
 ```{r, echo = T, message = FALSE, results='hide', warning=FALSE}
@@ -48,6 +50,8 @@ a.p2 = pitch_df %>%
 (a.p1 + a.p2)
 ```
 
+As the plot shows above, we can conclude that female and informal attitude are tending to have higher frequency.
+
 \newpage
 
 # (b)
@@ -67,7 +71,14 @@ VarCorr(LMM1)[1]
 VarCorr(LMM1)[2]
 ```
 
+sigma_b^2 = 598.1953
+
+sigma^2 = 847.7049
+
 sigma_b^2 + sigma^2 = 598.1953 + 847.7049 = 1445.9
+
+For every subject, we have 14 measurements, so the covariance matrix is a 14*14 matrix.
+
 
 
 
@@ -101,7 +112,7 @@ pitch_df$frequency-fitted(LMM1)
 ## Fit a mixed effects model with intercepts for different subjects (gender, attitude and their interaction being the fixed effects).
 
 ```{r}
-LMM2 <- lme (frequency ~ gender * attitude, random = ~1 | subject,  data = pitch_df, method='REML') 
+LMM2 <- lme (frequency ~ gender + attitude + gender * attitude, random = ~1 | subject,  data = pitch_df, method='REML') 
 summary (LMM2)
 ```
 
@@ -111,11 +122,12 @@ summary (LMM2)
 ```{r}
 LMM.1 <- lme (frequency ~ gender + attitude, random = ~1 | subject,  data = pitch_df, method='ML')
 
-LMM.2 <- lme (frequency ~ gender * attitude, random = ~1 | subject,  data = pitch_df, method='ML')
+LMM.2 <- lme (frequency ~ gender + attitude + gender * attitude, random = ~1 | subject,  data = pitch_df, method='ML')
 
 anova(LMM.2,LMM.1) 
 ```
 
+Since the p-value for Likelihood ratio test is 0.2392 > 0.05, we fail to reject the null hypothesis and conclude that the interaction term is not significantly associated with pitch, at the significance level of 0.05.
 
 \newpage
 
@@ -152,9 +164,17 @@ sigma_b^2 + sigma^2 = 837.6897 + 637.7645 = 1475.454
 
 
 
+
+
+
+
+
 ## What is the interpretation of the coefficient for the fixed effect term attitude?
 
+```{r}
+fixed.effects(LMM3)
+```
 
-
+When the gender is fixed, the mean frequency of polite attitude will be 20.00238 units lower than informal attitude on average.
 
 
