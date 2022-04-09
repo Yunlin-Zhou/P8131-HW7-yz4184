@@ -71,11 +71,35 @@ summary (LMM1)
 
 ## What is the covariance matrix for a subject Yi?
 
+```{r}
+VarCorr(LMM1)
+VarCorr(LMM1)[1]
+VarCorr(LMM1)[2]
+```
+
+sigma_b^2 + sigma^2 = 598.1953 + 847.7049 = 1445.9
+
 ## What is the covariance matrix for the estimates of fixed effects?
+
+```{r}
+vcov(LMM1)
+```
+
 
 ## What are the BLUPs for subject-specific intercepts?
 
+```{r}
+random.effects(LMM1)
+```
+
+
 ## What are the residuals?
+
+```{r}
+pitch_df$frequency-fitted(LMM1)
+```
+
+
 
 # (c)
 ## Fit a mixed effects model with intercepts for different subjects (gender, attitude and their interaction being the fixed effects).
@@ -100,6 +124,11 @@ anova(LMM.2,LMM.1)
 ## Write out the mixed effects model with random intercepts for both subjects and scenarios (gender and attitude being the fixed effects).
 
 ##  Fit the model using lmer in the lme4 package.
+
+```{r}
+LMM3 <- lme(frequency ~ gender + attitude, random = ~ 1 + attitude | subject, data = data.poli)
+```
+
 
 ##  Write out the covariance matrix for a subject Yi.
 
